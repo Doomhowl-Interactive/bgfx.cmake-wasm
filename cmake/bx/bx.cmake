@@ -101,8 +101,10 @@ target_compile_features(bx PUBLIC cxx_std_14)
 target_compile_options(bx PUBLIC $<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus /Zc:preprocessor>)
 
 # bx/include/bx/simd_t.h includes smmintrin.h unconditionally, so x86/x64 builds need SSE4.2.
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|amd64|AMD64|i[3-6]86|x86)$" OR
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten" AND
+	(CMAKE_SYSTEM_PROCESSOR MATCHES "^(x86_64|amd64|AMD64|i[3-6]86|x86)$" OR
 	CMAKE_CXX_COMPILER_ARCHITECTURE_ID MATCHES "^(x86_64|amd64|AMD64|i[3-6]86|x86)$")
+	)
 	target_compile_options(bx PUBLIC $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-msse4.2>)
 endif()
 
